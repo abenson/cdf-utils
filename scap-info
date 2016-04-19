@@ -1,0 +1,36 @@
+#!/usr/bin/env python2.7
+# coding: utf-8
+
+from sys import *
+import os
+import zipfile
+import xml.dom.minidom
+
+try:
+	scap = zipfile.ZipFile(argv[1], mode="r")
+except zipfile.BadZipfile:
+	print "'" + argv[1] + "' is not a valid zipfile."
+	exit()
+except IOError:
+	print "Could not open '" + argv[1] + "'"
+	exit()
+except IndexError:
+	print "usage: " + argv[0]
+	exit()
+
+
+for zi in scap.infolist():
+	if zi.filename.find("-xccdf.xml") != -1:
+		xccdf = scap.open(zi.filename).read()
+		break
+
+doc = xml.dom.minidom.parseString(xccdf)
+
+print "Benchark ID: " + doc.childNodes[0].attributes["id"].value
+
+print "Profiles:"
+
+for el in doc.childNodes[0].childNodes:
+	if el.nodeName == "Profile":
+		print "   " + el.attributes["id"].value
+
