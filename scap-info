@@ -15,7 +15,7 @@ except IOError:
 	print "Could not open '" + argv[1] + "'"
 	exit()
 except IndexError:
-	print "usage: " + argv[0]
+	print "usage: " + argv[0] + " <FILE.zip>"
 	exit()
 
 
